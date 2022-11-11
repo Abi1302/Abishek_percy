@@ -30,7 +30,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * Unit test for example App.
  */
 public class AppTest {
-    private static final String TEST_URL = "https://www.browserstack.com/";
+    private static final String TEST_URL = "https://k8s.bsstag.com/";
     private static ExecutorService serverExecutor;
     private static HttpServer server;
     private static WebDriver driver;
