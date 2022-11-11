@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -22,12 +23,14 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 import io.percy.selenium.Percy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Unit test for example App.
  */
 public class AppTest {
-    private static final String TEST_URL = "http://localhost:8000";
+    private static final String TEST_URL = "https://www.browserstack.com/";
     private static ExecutorService serverExecutor;
     private static HttpServer server;
     private static WebDriver driver;
@@ -35,8 +38,7 @@ public class AppTest {
 
     @BeforeEach
     public void startAppAndOpenBrowser() throws IOException {
-        // Disable browser logs from being logged to stdout
-        System.setProperty(FirefoxDriver.SystemProperty.BROWSER_LOGFILE,"/dev/null");
+        System.setProperty("webdriver.gecko.driver","/Users/abishek/Documents/Selenium Jars and Drivers/geckodriver");
         // Create a threadpool with 1 thread and run our server on it.
         serverExecutor = Executors.newFixedThreadPool(1);
         server = App.startServer(serverExecutor);
@@ -58,7 +60,7 @@ public class AppTest {
     @Test
     public void loadsHomePage() {
         driver.get(TEST_URL);
-        WebElement element = driver.findElement(By.className("todoapp"));
+        WebElement element = driver.findElement(By.xpath("//*[@id=\"post-26\"]"));
         assertNotNull(element);
 
         // Take a Percy snapshot.
@@ -67,42 +69,21 @@ public class AppTest {
 
     @Test
     public void acceptsANewTodo() {
-        driver.get(TEST_URL);
+        driver.get(TEST_URL+"/pricing");
 
         // We start with zero todos.
-        List<WebElement> todoEls = driver.findElements(By.cssSelector(".todo-list li"));
-        assertEquals(0, todoEls.size());
-
-        // Add a todo in the browser.
-        WebElement newTodoEl = driver.findElement(By.className("new-todo"));
-        newTodoEl.sendKeys("A new fancy todo!");
-        newTodoEl.sendKeys(Keys.RETURN);
-
-        // Now we should have 1 todo.
-        todoEls = driver.findElements(By.cssSelector(".todo-list li"));
-        assertEquals(1, todoEls.size());
-
-        // Take a Percy snapshot specifying browser widths.
-        percy.snapshot("One todo", Arrays.asList(768, 992, 1200));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebElement checkBox = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"live-plans\"]")));
+        assertNotNull(checkBox);
+        percy.snapshot("pricing");
     }
 
     @Test
     public void letsYouCheckOffATodo() {
-        driver.get(TEST_URL);
-
-        WebElement newTodoEl = driver.findElement(By.className("new-todo"));
-        newTodoEl.sendKeys("A new todo to check off");
-        newTodoEl.sendKeys(Keys.RETURN);
-
-        WebElement todoCountEl = driver.findElement(By.className("todo-count"));
-        assertEquals("1 item left", todoCountEl.getText());
-
-        driver.findElement(By.cssSelector("input.toggle")).click();
-
-        todoCountEl = driver.findElement(By.className("todo-count"));
-        assertEquals("0 items left", todoCountEl.getText());
-
-        // Take a Percy snapshot specifying a minimum height.
-        percy.snapshot("Checked off todo", null, 2000);
+        driver.get(TEST_URL+"/integrations/automate");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebElement popIntgr = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[@id=\"post-2245\"]")));
+        assertNotNull(popIntgr);
+        percy.snapshot("Automate");
     }
 }
