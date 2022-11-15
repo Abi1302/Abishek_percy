@@ -40,8 +40,8 @@ public class AppTest {
     public void startAppAndOpenBrowser() throws IOException {
         System.setProperty("webdriver.gecko.driver","/Users/abishek/Documents/Selenium Jars and Drivers/geckodriver");
         // Create a threadpool with 1 thread and run our server on it.
-        serverExecutor = Executors.newFixedThreadPool(1);
-        server = App.startServer(serverExecutor);
+        //serverExecutor = Executors.newFixedThreadPool(1);
+        //server = App.startServer(serverExecutor);
         FirefoxOptions options = new FirefoxOptions();
         options.setHeadless(true);
         driver = new FirefoxDriver(options);
@@ -53,8 +53,8 @@ public class AppTest {
         // Close our test browser.
         driver.quit();
         // Shutdown our server and make sure the threadpool also terminates.
-        server.stop(1);
-        serverExecutor.shutdownNow();
+        //server.stop(1);
+        //serverExecutor.shutdownNow();
     }
 
     @Test
