@@ -18,7 +18,7 @@ import com.sun.net.httpserver.HttpServer;
  */
 public class App {
     // Server port.
-    private static final Integer PORT = 8001;
+    private static final Integer PORT = 8000;
     // This file path is relative to that classpath root.
     private static final String INDEX_PATH = "index.html";
     // Recognized Mime type map (extension -> mimetype)
